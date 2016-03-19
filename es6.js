@@ -231,7 +231,7 @@
     foo: 'foo'
   }
 
-  const newObj = Object.assign(obj, {
+  const newObj = Object.assign({}, obj, {
     bar: 'bar'
   });
 

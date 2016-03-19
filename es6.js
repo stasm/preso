@@ -3,9 +3,9 @@
   the future of js is now.
   how to make the most of it?
 
-  staś małolepszy
-  @stas
-  19 marca 2016
+  staś małolepszy, @stas
+
+  meet.js, march 19, 2016
 
 // }}}
 // {{{ arrow functions 1
@@ -95,17 +95,27 @@
 // }}}
 // {{{ object property shorthand 2
 
-  function() {
-    // ...
-    return {name, type};
+  function find(key) {
+    return Model.find({key});
   }
 
 // }}}
 // {{{ object property shorthand 3
 
-  function find(key) {
-    return Model.find({key});
+  function foo() {
+    // ...
+    return {name, type};
   }
+
+// }}}
+// {{{ destructuring assignment in arrays
+
+  function foo() {
+    // ...
+    return [name, type];
+  }
+
+  const [name, type] = foo();
 
 // }}}
 // {{{ destructuring assignment 1
@@ -138,27 +148,11 @@
   const { foo, bar: { quux } } = elem;
 
 // }}}
-// {{{ destructuring assignment 4
-
-  const { foo } = elem;
-  const { foo: foo } = elem;
-  console.log(foo);
-
-  const { foo: myFoo } = elem;
-  console.log(myFoo);
-
-// }}}
-// {{{ destructuring assignment 4
-
-  const { foo: myFoo, bar: { quux: myQuux } } = elem;
-  console.log(myQuux);
-
-// }}}
 // {{{ destructuring in loops 1
 
   const people = [
-    { name: 'malezy' },
-    { name: 'posygo' },
+    { name: 'Sebastian' },
+    { name: 'Bogusław' },
   ];
 
   for (let {name} of people) {
@@ -178,19 +172,20 @@
   }
 
 // }}}
-// {{{ destructuring in loops 3
+// {{{ destructuring in arguments 1
 
-  const arr = [
-    ['a', {}]
-    ['b', { foo: 'foo' }]
-  ];
+  const lang = {
+    name: 'English',
+    code: 'en-US',
+    dir: 'ltr'
+  };
 
-  for (let [index, [key, data]] of arr.entries()) {
-    // ...
+  function fetchResource(path, {code}) {
+    return fetch(code + path).then(…);
   }
 
 // }}}
-// {{{ destructuring in arguments
+// {{{ destructuring in arguments 2
 
   function rectarea(p1, p2) {
     return Math.abs(
@@ -236,18 +231,7 @@
     foo: 'foo'
   }
 
-  const newObj = Object.assign({}, obj, {
-    bar: 'bar'
-  });
-
-// }}}
-// {{{ Object.assign for merging
-
-  const obj = {
-    foo: 'foo'
-  }
-
-  const newObj = Object.assign({}, obj, {
+  const newObj = Object.assign(obj, {
     bar: 'bar'
   });
 
@@ -256,7 +240,7 @@
 
   function arr2obj(arr) {
     return arr.reduce(
-      (obj, [key, val]) => Object.assign(obj, {
+      (obj, [key, val]) => Object.assign({}, obj, {
         [key]: val
       }, {})
     );
@@ -301,18 +285,19 @@
 // }}}
 // {{{ rest parameters 2
 
+  Array.prototype.push.apply(arr1, arr2);
+
+  arr1.push(...arr2);
+
+// }}}
+// {{{ rest parameters 3
+
   doSomethingAsync.then(
     res => console.log(res)
   );
 
   doSomethingAsync.then(
     (...args) => console.log(...args)
-  );
-
-  doSomethingAsync.then(unbound);
-
-  doSomethingAsync.then(
-    (...args) => unbound(...args)
   );
 
 // }}}
@@ -347,25 +332,11 @@
   }
 
 // }}}
-// {{{ Promises and catch
-
-  return doAsync
-    .then(process)
-    .catch(err => console.error(err.stack));
-
-// }}}
 // {{{ Promise.resolve
 
   return exists ?
     doSomethingAsync() :
     Promise.resolve();
-
-// }}}
-// {{{ Promise.resolve in lieu of new Promise()
-
-  return Promise.resolve().then(
-  // ...
-);
 
 // }}}
 // {{{ Promise.all
@@ -382,8 +353,6 @@
       )
     )
   );
-
-// wspomnieć o ...args w then()
 
 // }}}
 // {{{ sequences of Promises
@@ -410,6 +379,7 @@
   function recurse() {
     Promise.resolve().then(recurse);
   }
+
   Promise.resolve().then(recurse);
 
 // }}}
@@ -437,11 +407,24 @@
 
   const props = new WeakMap();
 
-  function MyObject(name) {
-    this.name = name;
-    props.set(this, {
-      createdAt: new Date()
-    });
+  class MyObject {
+    constructor() {
+      props.set(this, {
+        initialized: true,
+        createdAt: new Date()
+      });
+    }
+  }
+
+// }}}
+// {{{ WeakSets for tagging
+
+  const myobjects = new WeakSet();
+
+  class MyObject {
+    constructor() {
+      myobjects.add(this);
+    }
   }
 
 // }}}
@@ -489,6 +472,30 @@ for (let i of r) {
 
   const player = createPlayer();
   player[jump]();
+
+// }}}
+// {{{ do-notation with generators
+
+function step(iter, val) {
+  const {value, done} = iter.next(val);
+
+  return done ?
+    value :
+    value.then(
+      val => step(iter, val)
+    );
+}
+
+function cont(gen) {
+  return step(gen());
+}
+
+cont(function* () {
+  const foo = yield Promise.resolve('foo');
+  const bar = yield Promise.resolve('bar');
+
+  return foo + bar;
+}).then(result => console.log(things));
 
 // }}}
 // {{{ outro

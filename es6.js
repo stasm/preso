@@ -65,7 +65,7 @@
 // }}}
 // {{{ block-scoped variables in loops 2
 
-  for (let a of document.querySelectorAll('a')) {
+  for (const a of document.querySelectorAll('a')) {
     a.addEventListener(
       'click',
       () => alert(a.getAttribute('href'))
@@ -75,7 +75,7 @@
 // }}}
 // {{{ for-of and iteration
 
-  for (let elem of iterable) {
+  for (const elem of iterable) {
     // ...
   }
 
@@ -155,7 +155,7 @@
     { name: 'Bogusław' },
   ];
 
-  for (let {name} of people) {
+  for (const {name} of people) {
     // ...
   }
 
@@ -167,7 +167,7 @@
     ['b', { foo: 'foo' }]
   ];
 
-  for (let [key, data] of arr) {
+  for (const [key, data] of arr) {
     // ...
   }
 
@@ -449,7 +449,7 @@ class Range {
 }
 
 const r = new Range(4);
-for (let i of r) {
+for (const i of r) {
   console.log(i);
 }
 

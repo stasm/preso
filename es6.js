@@ -499,7 +499,7 @@ cont(function* () {
   const bar = yield Promise.resolve('bar');
 
   return foo + bar;
-}).then(result => console.log(things));
+}).then(result => console.log(result));
 
 // }}}
 // {{{ outro

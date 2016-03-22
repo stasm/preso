@@ -416,6 +416,8 @@
     }
   }
 
+  const myobj = new MyObject();
+
 // }}}
 // {{{ WeakSets for tagging
 
@@ -426,6 +428,8 @@
       myobjects.add(this);
     }
   }
+
+  const myobj = new MyObject();
 
 // }}}
 // {{{ Symbols for metaprogramming

@@ -502,6 +502,18 @@ cont(function* () {
 }).then(result => console.log(result));
 
 // }}}
+// {{{ next: async functions
+
+async function foobar() {
+  const foo = await Promise.resolve('foo');
+  const bar = await Promise.resolve('bar');
+
+  return foo + bar;
+}
+
+foobar().then(console.log);
+
+// }}}
 // {{{ outro
 
   A that's it!

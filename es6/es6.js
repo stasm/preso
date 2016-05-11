@@ -1,14 +1,18 @@
 // {{{ intro
 
-  the future of js is now.
-  how to make the most of it?
+
+
+  Na co mi ten ECMAScript?
 
   staś małolepszy, @stas
 
-  meet.js, march 19, 2016
+
+
 
 // }}}
 // {{{ arrow functions 1
+
+
 
   arr.map(
     function(elem) { return elem.prop; }
@@ -18,8 +22,13 @@
     elem => elem.prop
   );
 
+
+
+
 // }}}
 // {{{ arrow functions 2
+
+
 
   doSomethingAsync.then(
     console.log.bind(console)
@@ -29,13 +38,16 @@
     res => console.log(res)
   );
 
+
+
 // }}}
 // {{{ arrow functions 3: this
+
 
   Cache.prototype.purgeAll = function() {
     this.urls.forEach(function(url) {
       this.purge(url, true);
-    }.bind(this);
+    }.bind(this));
   }
 
   Cache.prototype.purgeAll = function() {
@@ -45,15 +57,42 @@
   }
 
 // }}}
-// {{{ block-scoped variables
+// {{{ block-scoped variables 1
+
+
+
 
   var i;
 
   let i;
   const hello = doSomething();
 
+
+
+
+// }}}
+// {{{ block-scoped variables 2
+
+  if (isAlly) {
+    var hello = 'Hello';
+  } else {
+    var hello = 'Go away';
+  }
+
+  let hello;
+  if (isAlly) {
+    hello = 'Hello';
+  } else {
+    hello = 'Go away';
+  }
+
+  const hello = isAlly ?
+    'Hello' : 'Go away';
+
 // }}}
 // {{{ block-scoped variables in loops 1
+
+
 
   for (var a of document.querySelectorAll('a')) {
     a.addEventListener(
@@ -62,8 +101,12 @@
     );
   }
 
+
+
 // }}}
 // {{{ block-scoped variables in loops 2
+
+
 
   for (const a of document.querySelectorAll('a')) {
     a.addEventListener(
@@ -72,15 +115,25 @@
     );
   }
 
+
+
+
 // }}}
 // {{{ for-of and iteration
+
+
 
   for (const elem of iterable) {
     // ...
   }
 
+
+
+
 // }}}
 // {{{ object property shorthand 1
+
+
 
   const foo = 'foo';
 
@@ -92,23 +145,43 @@
     foo
   }
 
+
+
 // }}}
 // {{{ object property shorthand 2
+
+
+
+  function find(key) {
+    return Model.find({key: key});
+  }
 
   function find(key) {
     return Model.find({key});
   }
 
+
+
+
 // }}}
 // {{{ object property shorthand 3
+
+
+
 
   function foo() {
     // ...
     return {name, type};
   }
 
+
+
+
 // }}}
 // {{{ destructuring assignment in arrays
+
+
+
 
   function foo() {
     // ...
@@ -117,15 +190,26 @@
 
   const [name, type] = foo();
 
+
+
+
 // }}}
 // {{{ destructuring assignment 1
+
+
+
 
   const prop = elem.prop;
 
   const { prop } = elem;
 
+
+
+
 // }}}
 // {{{ destructuring assignment 2
+
+
 
   const elem = {
     foo: 'foo',
@@ -135,8 +219,12 @@
 
   const { foo, bar } = elem;
 
+
+
 // }}}
 // {{{ destructuring assignment 3
+
+
 
   const elem = {
     foo: 'foo',
@@ -145,10 +233,29 @@
     }
   };
 
-  const { foo, bar: { quux } } = elem;
+  const { foo, bar: hey } = elem;
+
+
+
+
+// }}}
+// {{{ destructuring assignment 4
+
+
+
+
+  const arr = ['a', 'b', 'c'];
+
+  const [a] = arr;
+  const [, b] = arr;
+
+
+
 
 // }}}
 // {{{ destructuring in loops 1
+
+
 
   const people = [
     { name: 'Sebastian' },
@@ -159,8 +266,12 @@
     // ...
   }
 
+
+
 // }}}
 // {{{ destructuring in loops 2
+
+
 
   const arr = [
     ['a', {}]
@@ -171,8 +282,12 @@
     // ...
   }
 
+
+
 // }}}
 // {{{ destructuring in arguments 1
+
+
 
   const lang = {
     name: 'English',
@@ -184,8 +299,30 @@
     return fetch(code + path).then(…);
   }
 
+
+
 // }}}
 // {{{ destructuring in arguments 2
+
+
+
+  function foo() {
+    // …
+    return [name, type];
+  }
+
+  function bar([identifier]) {
+    // …
+  }
+
+  bar(foo());
+
+
+
+// }}}
+// {{{ destructuring in arguments 3
+
+
 
   function rectarea(p1, p2) {
     return Math.abs(
@@ -199,24 +336,37 @@
     );
   }
 
+
+
 // }}}
 // {{{ default values for parameters 1
+
+
 
   function doSomething(arg, options = {debug: false}) {
     // ...
   }
+
+
 
   doSomething('hello', {debug: true});
 
 // }}}
 // {{{ default values for parameters 2
 
+
+
   function omg({ x = 10 } = {}, { y } = { y: 10 }) {
     console.log(x, y);
   }
 
+
+
 // }}}
 // {{{ computed property names
+
+
+
 
   const foo = 'foo';
 
@@ -224,8 +374,13 @@
     [foo]: 1
   };
 
+
+
+
 // }}}
 // {{{ Object.assign
+
+
 
   const obj = {
     foo: 'foo'
@@ -235,8 +390,11 @@
     bar: 'bar'
   });
 
+
+
 // }}}
 // {{{ Object.assign with reduce
+
 
   function arr2obj(arr) {
     return arr.reduce(
@@ -250,6 +408,7 @@
     ['foo', 1],
     ['bar', 2],
   ]);
+
 
 // }}}
 // {{{ Object.assign for composition
@@ -275,6 +434,7 @@
 // }}}
 // {{{ rest parameters 1
 
+
   function foo(...args) {
     // args is an Array
   }
@@ -285,12 +445,17 @@
 // }}}
 // {{{ rest parameters 2
 
+
   Array.prototype.push.apply(arr1, arr2);
 
   arr1.push(...arr2);
 
+
+
 // }}}
 // {{{ rest parameters 3
+
+
 
   doSomethingAsync.then(
     res => console.log(res)
@@ -300,8 +465,12 @@
     (...args) => console.log(...args)
   );
 
+
+
 // }}}
 // {{{ spread 1
+
+
 
   Array.prototype.slice.call(
     document.querySelectorAll('p')
@@ -309,21 +478,35 @@
 
   [...document.querySelectorAll('p')];
 
+
+
 // }}}
 // {{{ spread 2
+
+
 
   [...arr, elem]
   [elem, ...arr]
 
+  const [head, ...tail] = arr;
+
+
+
 // }}}
 // {{{ spread 3
+
+
 
   const pos = arr.indexOf(elem);
 
   [...arr.slice(0, pos), ...arr.slice(pos + 1)];
 
+
+
 // }}}
 // {{{ Promises for storing one-off state
+
+
 
   function Text(src) {
     this.loaded = fetch(src).then(
@@ -331,15 +514,22 @@
     );
   }
 
+
+
 // }}}
 // {{{ Promise.resolve
+
+
 
   return exists ?
     doSomethingAsync() :
     Promise.resolve();
 
+
+
 // }}}
 // {{{ Promise.all
+
 
   const urls = [
     '/foo.txt',
@@ -354,8 +544,10 @@
     )
   );
 
+
 // }}}
 // {{{ sequences of Promises
+
 
   const urls = [
     '/foo.txt',
@@ -364,15 +556,16 @@
 
   return urls.reduce(
     (seq, url) => seq.then(
-      () => fetch(url).then(
-        resp => resp.text()
-      )
+      () => fetch(url)
     ),
     Promise.resolve()
   );
 
+
+
 // }}}
 // {{{ Promise.then performance
+
 
   setTimeout(() => console.log('yo'));
 
@@ -380,21 +573,26 @@
     Promise.resolve().then(recurse);
   }
 
+  // DO NOT TRY THIS AT HOME
   Promise.resolve().then(recurse);
+
 
 // }}}
 // {{{ Destructuring Promise.then arguments
+
 
   Promise.all(things).then(
     values => ...
   );
 
   Promise.all(things).then(
-    [foo, bar] => ...
+    ([foo, bar]) => ...
   );
+
 
 // }}}
 // {{{ New data types
+
 
   const map = new Map();
   const set = new Set();
@@ -402,8 +600,10 @@
   const wmap = new WeakMap();
   const wset = new WeakSet();
 
+
 // }}}
 // {{{ WeakMaps for private data
+
 
   const props = new WeakMap();
 
@@ -418,18 +618,26 @@
 
   const myobj = new MyObject();
 
+
 // }}}
 // {{{ WeakSets for tagging
+
 
   const myobjects = new WeakSet();
 
   class MyObject {
-    constructor() {
-      myobjects.add(this);
+    constructor() { myobjects.add(this); }
+    hello()       {
+      return myobjects.has(this) ?
+        'Hello' : 'Go away';
     }
   }
 
   const myobj = new MyObject();
+  const fake = new FakeObject();
+
+  MyObject.prototype.hello.call(fake);
+  // → Go away
 
 // }}}
 // {{{ Symbols for metaprogramming
@@ -438,17 +646,11 @@ class Range {
   constructor(max) {
     this.max = max;
   }
-  [Symbol.iterator]() {
-    const max = this.max;
+  *[Symbol.iterator]() {
     let i = 0;
-
-    return {
-      next() {
-        return (i < max) ?
-          {value: i++, done: false} :
-          {value: undefined, done: true}
-      }
-    };
+    while (i < this.max) {
+      yield i++;
+    }
   }
 }
 
@@ -478,31 +680,9 @@ for (const i of r) {
   player[jump]();
 
 // }}}
-// {{{ do-notation with generators
-
-function step(iter, val) {
-  const {value, done} = iter.next(val);
-
-  return done ?
-    value :
-    value.then(
-      val => step(iter, val)
-    );
-}
-
-function cont(gen) {
-  return step(gen());
-}
-
-cont(function* () {
-  const foo = yield Promise.resolve('foo');
-  const bar = yield Promise.resolve('bar');
-
-  return foo + bar;
-}).then(result => console.log(result));
-
-// }}}
 // {{{ next: async functions
+
+
 
 async function foobar() {
   const foo = await Promise.resolve('foo');
@@ -513,12 +693,19 @@ async function foobar() {
 
 foobar().then(console.log);
 
+
+
+
 // }}}
 // {{{ outro
 
-  A that's it!
-  Questions?
+
+
+  Dzięki!
 
   @stas
+
+
+
 
 // }}}

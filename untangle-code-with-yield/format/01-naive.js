@@ -1,17 +1,20 @@
+const print = require('./print');// {{{
 const parse = require('./parse');
 
-module.exports = interpolate;
+module.exports = interpolate;// }}}
 
-const filters = {
+const filters = {// {{{
   toUpper(str) {
     return str.toUpperCase();
   },
-  toLower(str) {
-    return str.toLowerCase();
+  toMonth(date) {
+    return date.toLocaleString('en-US', {
+      month: 'long'
+    });
   }
-};
+};// }}}
 
-function Reference(args, {name}) {
+function Reference(args, {name}) {// {{{
   return args[name];
 }
 
@@ -29,19 +32,19 @@ function Value(args, expr) {
     case 'Filter':
       return Filter(args, expr);
   }
-}
+}// }}}
 
-function interpolate(str, args) {
+function interpolate(str, args) {// {{{
   let result = '';
   for (const part of parse(str)) {
     result += Value(args, part);
   }
   return result;
-}
+}// }}}
 
-// const result = interpolate('aaa {b | toUpper } ccc {d} eee', {
-//   b: 'Abc',
-//   d: 'ddd',
-// });
+const result = interpolate(
+  '{ city } in { date | toMonth | toUpper }',
+  { city: 'Warsaw', date: new Date() }
+);
 
-// console.log(result);
+print(result);

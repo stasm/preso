@@ -1,8 +1,9 @@
+const print = require('./print');
 const parse = require('./parse');
 
 module.exports = format;
 
-class RW {
+class ReadWrite {
   constructor(fn) {
     this.fn = fn;
   }
@@ -12,7 +13,7 @@ class RW {
   }
 
   flatMap(fn) {
-    return new RW(ctx => {
+    return new ReadWrite(ctx => {
       const [cur, curErrs] = this.run(ctx);
       const [val, valErrs] = fn(cur).run(ctx);
       return [val, [...curErrs, ...valErrs]];
@@ -20,28 +21,27 @@ class RW {
   }
 }
 
-RW.ask = function() {
-  return new RW(ctx => [ctx, []]);
+function ask() {
+  return new ReadWrite(ctx => [ctx, []]);
 }
 
-RW.tell = function(log) {
-  return new RW(() => [null, [log]]);
+function tell(log) {
+  return new ReadWrite(() => [null, [log]]);
 }
 
-RW.unit = function(val) {
-  return new RW(() => [val, []]);
+function unit(val) {
+  return new ReadWrite(() => [val, []]);
 }
 
-RW.fail = function(val, log) {
-  return new RW(() => [val, [log]]);
+function fail(val, log) {
+  return new ReadWrite(() => [val, [log]]);
 }
 
-function zzz(iter) {
+function wield(iter) {
   return function step(resume) {
     const {value, done} = iter.next(resume);
-    // console.log(value, done);
-    const rw = (value instanceof RW) ?
-      value : RW.unit(value);
+    const rw = (value instanceof ReadWrite) ?
+      value : unit(value);
     return done ? rw : rw.flatMap(step);
   }();
 }
@@ -51,25 +51,24 @@ function zzz(iter) {
 const filters = {
   toUpper(str) {
     if (typeof str !== 'string') {
-      return RW.fail(str, `Invalid argument to toUpper: ${typeof str}`);
+      return fail(str, `Invalid argument to toUpper: ${typeof str}`);
     }
 
     return str.toUpperCase();
   },
-  toLower(str) {
-    if (typeof str !== 'string') {
-      return RW.fail(str, `Invalid argument to toLower: ${typeof str}`);
+  toMonth(date) {
+    if (!(date instanceof Date)) {
+      return fail(date, `Invalid argument to toMonth: ${typeof date}`);
     }
-
-    return str.toLowerCase();
+    return date.toLocaleString('en-US', { month: 'long' });
   }
 };
 
 function* Reference({name}) {
-  const args = yield RW.ask();
+  const args = yield ask();
   return name in args ?
     yield args[name] :
-    yield RW.fail(name, `Unknown reference: ${name}`);
+    yield fail(name, `Unknown reference: ${name}`);
 }
 
 function* Filter({name, arg}) {
@@ -77,7 +76,7 @@ function* Filter({name, arg}) {
   const filter = filters[name];
 
   if (!filter) {
-    return yield RW.fail(val, `Unknown filter: ${name}`);
+    return yield fail(val, `Unknown filter: ${name}`);
   }
 
   return yield filter(val);
@@ -103,12 +102,13 @@ function* interpolate(str) {
 }
 
 function format(str, args) {
-  return zzz(interpolate(str, args)).run(args);
+  return wield(interpolate(str, args)).run(args);
 }
 
-// const result = format('aaa {b|toUpper|xxx} ccc {d|toUpper} eee', {
-//   b: 'bBb',
-//   d: 5,
-// });
+const [result, errors] = format(
+  '{ city } in { date | toMonht | toUpper }',
+  { city: 'Warsaw', date: new Date() }
+);
 
-// console.log(result);
+print(result);
+console.dir(errors);

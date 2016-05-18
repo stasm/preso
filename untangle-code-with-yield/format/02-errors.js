@@ -1,3 +1,4 @@
+const print = require('./print');
 const parse = require('./parse');
 
 module.exports = interpolate;
@@ -8,10 +9,10 @@ const filters = {
       [str.toUpperCase(), []] :
       [str, [`Invalid argument to toUpperCase: ${typeof str}`]];
   },
-  toLower(str) {
-    return typeof str === 'string' ?
-      [str.toLowerCase(), []] :
-      [str, [`Invalid argument to toLowerCase: ${typeof str}`]];
+  toMonth(date) {
+    return date instanceof Date ?
+      [date.toLocaleString('en-US', { month: 'long' }), []] :
+      [date, [`Invalid argument to toMonth: ${typeof date}`]];
   }
 };
 
@@ -56,9 +57,10 @@ function interpolate(str, args) {
   return [result, errs]
 }
 
-// const result = interpolate('aaa {b | toUpper } ccc {d} eee', {
-//   b: 'Abc',
-//   d: 'ddd',
-// });
+const [result, errors] = interpolate(
+  '{ city } in { date | toMonth | toUpper }',
+  { city: 'Warsaw', date: new Date() }
+);
 
-// console.log(result);
+print(result);
+console.dir(errors);

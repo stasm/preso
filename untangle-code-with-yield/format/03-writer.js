@@ -1,16 +1,17 @@
+const print = require('./print');
 const parse = require('./parse');
 
 module.exports = format;
 
 class Writer {
-  constructor(value = null, logs = []) {
+  constructor(value = null, errs = []) {
     this.value = value;
-    this.logs = logs;
+    this.errs = errs;
   }
 
   flatMap(fn) {
-    const {value, logs} = fn(this.value);
-    return new Writer(value, [...this.logs, ...logs]);
+    const {value, errs} = fn(this.value);
+    return new Writer(value, [...this.errs, ...errs]);
   }
 }
 
@@ -18,11 +19,11 @@ function unit(val) {
   return new Writer(val, []);
 }
 
-function fail(val, log) {
-  return new Writer(val, [log]);
+function fail(val, err) {
+  return new Writer(val, [err]);
 }
 
-function zzz(iter) {
+function wield(iter) {
   return function step(resume) {
     const {value, done} = iter.next(resume);
     return done ? value : value.flatMap(step);
@@ -39,12 +40,12 @@ const filters = {
 
     return unit(str.toUpperCase());
   },
-  toLower(str) {
-    if (typeof str !== 'string') {
-      return fail(str, `Invalid argument to toLower: ${typeof str}`);
+  toMonth(date) {
+    if (!(date instanceof Date)) {
+      return fail(date, `Invalid argument to toMonth: ${typeof date}`);
     }
 
-    return unit(str.toLowerCase());
+    return unit(date.toLocaleString('en-US', { month: 'long' }));
   }
 };
 
@@ -85,12 +86,13 @@ function* interpolate(str, args) {
 }
 
 function format(str, args) {
-  return zzz(interpolate(str, args));
+  return wield(interpolate(str, args));
 }
 
-// const result = format('aaa {b|toUpper|xxx} ccc {d|toUpper} eee', {
-//   b: 'bBb',
-//   d: 5,
-// });
+const { value, errs } = format(
+  '{ city } in { date | toMonth | toUpper }',
+  { city: 'Warsaw', date: new Date() }
+);
 
-// console.log(result);
+print(value);
+console.dir(errs);

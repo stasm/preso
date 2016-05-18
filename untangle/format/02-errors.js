@@ -1,22 +1,22 @@
-const print = require('./print');
+const print = require('./print');// {{{
 const parse = require('./parse');
 
-module.exports = interpolate;
+module.exports = interpolate;// }}}
 
-const filters = {
+const filters = {// {{{
   toUpper(str) {
     return typeof str === 'string' ?
       [str.toUpperCase(), []] :
       [str, [`Invalid argument to toUpperCase: ${typeof str}`]];
   },
-  toMonth(date) {
+  toWeekDay(date) {
     return date instanceof Date ?
-      [date.toLocaleString('en-US', { month: 'long' }), []] :
+      [date.toLocaleString('en-US', { weekday: 'long' }), []] :
       [date, [`Invalid argument to toMonth: ${typeof date}`]];
   }
-};
+};// }}}
 
-function Reference(args, {name}) {
+function Reference(args, {name}) {// {{{
   return name in args ?
     [args[name], []] :
     [name, [`Unknown reference: ${name}`]];
@@ -43,9 +43,9 @@ function Value(args, expr) {
     case 'Filter':
       return Filter(args, expr);
   }
-}
+}// }}}
 
-function interpolate(str, args) {
+function interpolate(str, args) {// {{{
   let result = '';
   let errs = [];
 
@@ -55,11 +55,12 @@ function interpolate(str, args) {
     errs = [...errs, ...valErrs];
   }
   return [result, errs]
-}
+}// }}}
 
-const [result, errors] = interpolate(
-  '{ city } in { date | toMonth | toUpper }',
-  { city: 'Warsaw', date: new Date() }
+const [result, errors] = interpolate(`
+  It's {date | toWeekDay | toUpper}
+  and we're in {city}.
+`, { date: new Date(), city: 'Warsaw' }
 );
 
 print(result);

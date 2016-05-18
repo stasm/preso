@@ -3,7 +3,7 @@ class Words {
     this.str = str;
   }
   *[Symbol.iterator]() {
-    const re = /\w+/g;
+    const re = /\S+/g;
     let match;
     while (match = re.exec(this.str)) {
       yield match[0];
@@ -18,4 +18,6 @@ module.exports = function print(str) {
   for (const word of words) {
     console.log(word);
   }
+
+  console.log();
 }

@@ -1,9 +1,9 @@
-const print = require('./print');// {{{
+const print = require('./print');
 const parse = require('./parse');
 
-module.exports = format;// }}}
+module.exports = format;
 
-class ReadWrite {// {{{
+class ReadWrite {
   constructor(fn) {
     this.fn = fn;
   }
@@ -44,9 +44,11 @@ function wield(iter) {
       value : unit(value);
     return done ? rw : rw.flatMap(step);
   }();
-}// }}}
+}
 
-const filters = {// {{{
+// ----------------------------------------------------------------------------
+
+const filters = {
   toUpper(str) {
     if (typeof str !== 'string') {
       return fail(str, `Invalid argument to toUpper: ${typeof str}`);
@@ -60,9 +62,9 @@ const filters = {// {{{
     }
     return date.toLocaleString('en-US', { weekday: 'long' });
   }
-};// }}}
+};
 
-function* Reference({name}) {// {{{
+function* Reference({name}) {
   const args = yield ask();
   return name in args ?
     yield args[name] :
@@ -89,9 +91,9 @@ function* Value(expr) {
     case 'Filter':
       return yield* Filter(expr);
   }
-}// }}}
+}
 
-function* interpolate(str) {// {{{
+function* interpolate(str) {
   let result = yield '';
   for (const part of parse(str)) {
     result += yield* Value(part);
@@ -101,13 +103,4 @@ function* interpolate(str) {// {{{
 
 function format(str, args) {
   return wield(interpolate(str, args)).run(args);
-}// }}}
-
-const [result, errors] = format(`
-  It's {date | toWeekDay | toUpper}
-  and we're in {city}.
-`, { date: new Date(), city: 'Warsaw' }
-);
-
-print(result);
-console.dir(errors);
+}

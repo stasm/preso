@@ -7,9 +7,9 @@ const filters = {// {{{
   toUpper(str) {
     return str.toUpperCase();
   },
-  toMonth(date) {
+  toWeekDay(date) {
     return date.toLocaleString('en-US', {
-      month: 'long'
+      weekday: 'long'
     });
   }
 };// }}}
@@ -42,9 +42,10 @@ function interpolate(str, args) {// {{{
   return result;
 }// }}}
 
-const result = interpolate(
-  '{ city } in { date | toMonth | toUpper }',
-  { city: 'Warsaw', date: new Date() }
+const result = interpolate(`
+  It's {date | toWeekDay | toUpper}
+  and we're in {city}.
+`, { date: new Date(), city: 'Warsaw' }
 );
 
 print(result);

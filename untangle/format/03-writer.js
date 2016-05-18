@@ -1,9 +1,9 @@
-const print = require('./print');
+const print = require('./print');// {{{
 const parse = require('./parse');
 
-module.exports = format;
+module.exports = format;// }}}
 
-class Writer {
+class Writer {// {{{
   constructor(value = null, errs = []) {
     this.value = value;
     this.errs = errs;
@@ -28,11 +28,9 @@ function wield(iter) {
     const {value, done} = iter.next(resume);
     return done ? value : value.flatMap(step);
   }();
-}
+}// }}}
 
-// ----------------------------------------------------------------------------
-
-const filters = {
+const filters = {// {{{
   toUpper(str) {
     if (typeof str !== 'string') {
       return fail(str, `Invalid argument to toUpper: ${typeof str}`);
@@ -40,16 +38,16 @@ const filters = {
 
     return unit(str.toUpperCase());
   },
-  toMonth(date) {
+  toWeekDay(date) {
     if (!(date instanceof Date)) {
       return fail(date, `Invalid argument to toMonth: ${typeof date}`);
     }
 
-    return unit(date.toLocaleString('en-US', { month: 'long' }));
+    return unit(date.toLocaleString('en-US', { weekday: 'long' }));
   }
-};
+};// }}}
 
-function Reference(args, {name}) {
+function Reference(args, {name}) {// {{{
   return name in args ?
     unit(args[name]) :
     fail(name, `Unknown reference: ${name}`);
@@ -75,9 +73,9 @@ function* Value(args, expr) {
     case 'Filter':
       return yield* Filter(args, expr);
   }
-}
+}// }}}
 
-function* interpolate(str, args) {
+function* interpolate(str, args) {// {{{
   let result = yield unit('');
   for (const part of parse(str)) {
     result += yield* Value(args, part);
@@ -87,11 +85,12 @@ function* interpolate(str, args) {
 
 function format(str, args) {
   return wield(interpolate(str, args));
-}
+}// }}}
 
-const { value, errs } = format(
-  '{ city } in { date | toMonth | toUpper }',
-  { city: 'Warsaw', date: new Date() }
+const { value, errs } = format(`
+  It's {date | toWeekDay | toUpper}
+  and we're in {city}.
+`, { date: new Date(), city: 'Warsaw' }
 );
 
 print(value);

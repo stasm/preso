@@ -13,6 +13,6 @@ nnoremap <Leader>4 :set colorcolumn=+1<CR>
 nnoremap <leader>j zc zj zo z<CR>
 nnoremap <silent> <leader><CR> :TComment<CR> :silent w<CR>
 nnoremap <silent> <leader>o :TComment<CR>
-nnoremap <silent> <leader>] :TComment<CR> zc zj zo z<CR>
+nnoremap <silent> <leader>\ :TComment<CR> zc zj zo z<CR>
 
 redraw!

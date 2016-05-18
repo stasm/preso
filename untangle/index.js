@@ -163,7 +163,6 @@
   }
 
 }}}
-
 {{{ // Range
 
   class Range {
@@ -279,7 +278,7 @@
     }
   }
 
-  const abc = new MyArray('a', 'b', 'c');
+  const abc = new MyArray('d', 'e', 'f');
 
   for (const elem of abc) {
     // print(elem);
@@ -482,28 +481,11 @@
 
 
 
-  // yield { result: 1 } then
-  //   inject result into `a` and
-  //   yield { result: 2 } then  
-  //     inject result into `b` and
+  // yield wrapper1 then
+  //   inject result1 into `a` and
+  //   yield wrapper2 then  
+  //     inject result2 into `b` and
   //     return a + b
-
-
-
-
-
-}}}
-{{{ // pseudo code
-
-
-
-
-
-  // result1.then(
-  //   a => result2.then(
-  //     b => a + b
-  //   )
-  // );
 
 
 
@@ -540,8 +522,8 @@
   }
 
   const sum = wield(function* () {
-    const a = yield Promise.resolve(1);
-    const b = yield Promise.resolve(2);
+    const a = yield Promise.resolve(3);
+    const b = yield Promise.resolve(4);
     return a + b;
   }());
 
@@ -577,6 +559,23 @@
     "and we're in {city}.",
     { date: new Date(), city: 'Warsaw' }
   );
+
+
+
+
+
+}}}
+{{{ // conclusions!
+
+
+
+
+
+
+    // unwrap the wrappers
+    // cross the event loop boundary
+    // make things disappear and reappear
+
 
 
 

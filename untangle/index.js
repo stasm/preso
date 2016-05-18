@@ -1,6 +1,9 @@
-function print(arg) {// {{{
-  console.dir(arg, {depth: null, colors: true})
-}// }}}
+{{{ // ◔_◔
+  function print(arg) {
+    console.dir(arg, {depth: null, colors: true})
+  }
+  function format() {}
+}}}
 
 {{{ // I can do this
 
@@ -42,12 +45,29 @@ function print(arg) {// {{{
 
 
 
-
     for (const part of hello()) {
       // print(part);
     }
 
+    // https://github.com/stasm/preso/
 
+
+
+
+
+}}}
+{{{ // format()
+
+
+
+
+  format(
+    "It's { date | toWeekDay | toUpper } " +
+    "and we're in { city }.",
+    { date: new Date(), city: 'Warsaw' }
+  );
+
+  // → "It's WEDNESDAY and we're in Warsaw."
 
 
 
@@ -590,6 +610,41 @@ function print(arg) {// {{{
   // }());
   //
   // sum.then(print);
+
+
+
+
+}}}
+
+{{{ // support
+
+
+
+
+
+  //   Firefox   ✓
+  //   Chrome    ✓
+  //   Edge    13+
+  //   Safari   TP
+  //   Node.js  6+
+
+
+
+
+
+}}}
+{{{ // we did it!
+
+
+
+
+
+
+
+    // @stas
+
+
+
 
 
 

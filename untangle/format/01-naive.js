@@ -14,16 +14,7 @@ const filters = {// {{{
   }
 };// }}}
 
-function Reference(args, {name}) {// {{{
-  return args[name];
-}
-
-function Filter(args, {name, arg}) {
-  const val = Value(args, arg);
-  return filters[name](val);
-}
-
-function Value(args, expr) {
+function Value(args, expr) {// {{{
   switch (expr.type) {
     case 'Text':
       return expr.value;
@@ -32,6 +23,15 @@ function Value(args, expr) {
     case 'Filter':
       return Filter(args, expr);
   }
+}
+
+function Reference(args, {name}) {
+  return args[name];
+}
+
+function Filter(args, {name, arg}) {
+  const val = Value(args, arg);
+  return filters[name](val);
 }// }}}
 
 function interpolate(str, args) {// {{{

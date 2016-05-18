@@ -16,7 +16,18 @@ const filters = {// {{{
   }
 };// }}}
 
-function Reference(args, {name}) {// {{{
+function Value(args, expr) {// {{{
+  switch (expr.type) {
+    case 'Text':
+      return [expr.value, []];
+    case 'Reference':
+      return Reference(args, expr);
+    case 'Filter':
+      return Filter(args, expr);
+  }
+}
+
+function Reference(args, {name}) {
   return name in args ?
     [args[name], []] :
     [name, [`Unknown reference: ${name}`]];
@@ -32,17 +43,6 @@ function Filter(args, {name, arg}) {
 
   const [val2, errs2] = filter(val);
   return [val2, [...errs, ...errs2]];
-}
-
-function Value(args, expr) {
-  switch (expr.type) {
-    case 'Text':
-      return [expr.value, []];
-    case 'Reference':
-      return Reference(args, expr);
-    case 'Filter':
-      return Filter(args, expr);
-  }
 }// }}}
 
 function interpolate(str, args) {// {{{

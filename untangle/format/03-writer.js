@@ -47,7 +47,18 @@ const filters = {// {{{
   }
 };// }}}
 
-function Reference(args, {name}) {// {{{
+function* Value(args, expr) {// {{{
+  switch (expr.type) {
+    case 'Text':
+      return yield unit(expr.value);
+    case 'Reference':
+      return yield Reference(args, expr);
+    case 'Filter':
+      return yield* Filter(args, expr);
+  }
+}
+
+function Reference(args, {name}) {
   return name in args ?
     unit(args[name]) :
     fail(name, `Unknown reference: ${name}`);
@@ -62,17 +73,6 @@ function* Filter(args, {name, arg}) {
   }
 
   return yield filter(val);
-}
-
-function* Value(args, expr) {
-  switch (expr.type) {
-    case 'Text':
-      return yield unit(expr.value);
-    case 'Reference':
-      return yield Reference(args, expr);
-    case 'Filter':
-      return yield* Filter(args, expr);
-  }
 }// }}}
 
 function* interpolate(str, args) {// {{{

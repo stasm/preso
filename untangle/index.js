@@ -125,23 +125,6 @@
 
 
 }}}
-{{{ // Iterables
-   
-
-
-
-
-
-
-// Iterables implement [Symbol.iterator]()
-
-
-
-
-
-
-
-}}}
 
 {{{ // TupleArray
 
@@ -201,7 +184,7 @@
     // print(i);
   }
 
-  // print(...r);
+  // console.log(...r);
 
 }}}
 {{{ // Number
@@ -216,7 +199,7 @@
     }
   }
 
-  // print(...7);
+  // console.log(...5);
 
 
 
@@ -254,6 +237,7 @@
 
   const iter = abc[Symbol.iterator]();
 
+  // print(iter);
   // print(iter.next());
 
 
@@ -261,24 +245,24 @@
 
 
 }}}
-{{{ // iterator
+{{{ // for…of under the hood
 
 
 
+  function forof(iterable, fn) {
+    const iter = iterable[Symbol.iterator]();
+    let result = iter.next();
+    while (!result.done) {
+      const value = result.value;
+      fn(value);
+      result = iter.next();
+    }
+  }
 
-
-
-  // Iterators implement 'next'
-  // which returns { value, done }
-
-
-
-
-
+  // forof(['a', 'b', 'c'], print);
 
 
 }}}
-
 {{{ // explicit generator
 
   class MyArray extends Array {
@@ -302,23 +286,6 @@
   }
 
 }}}
-{{{ // for…of under the hood
-
-
-
-  function forof(iterable, fn) {
-    const iter = iterable[Symbol.iterator]();
-    let result;
-    while (!(result = iter.next()).done) {
-      const elem = result.value;
-      fn(elem);
-    }
-  }
-
-  // forof(['d', 'e', 'f'], print);
-
-
-}}}
 
 {{{
 
@@ -328,7 +295,7 @@
 
 
   // Iterables implement [Symbol.iterator]()
-  // Iterators implement next()
+  // Iterators implement next() and throw()
 
 
 
@@ -340,14 +307,14 @@
 {{{
 
 
-  // ┌───────────┐
-  // │ … [S.i] … │──── an iterable
-  // └─────┼─────┘
-  //       ▼
-  //    ┌──────┐
-  //    │ next │────── an iterator
-  //    └──┼───┘
-  //       ▼
+  //  ┌───────────┐
+  //  │ … [S.i] … │───── an iterable
+  //  └───────────┘
+  //        ▼
+  // ┌─────────────┐
+  // │ next, throw │──── an iterator
+  // └─────────────┘
+  //        ▼
   // ┌─────────────┐
   // │ value, done │
   // └─────────────┘
@@ -372,10 +339,10 @@
 
 
 }}}
-{{{ // numbers
+{{{ // integers
 
 
-  function* numbers() {
+  function* integers() {
     let i = 0;
 
     while (true) {
@@ -383,7 +350,7 @@
     }
   }
 
-  const iter = numbers();
+  const iter = integers();
   // print(iter.next());
   // print(iter.next());
 
@@ -400,27 +367,10 @@
     }
   }
 
-  const iterator = fib();
-  // print(iterator.next());
-  // print(iterator.next());
-  // print(iterator.next());
-
-}}}
-{{{ // fib in a loop
-
-
-
-
-
   for (const num of fib()) {
     if (num > 10) break;
     // print(num);
   }
-
-
-
-
-
 
 }}}
 
@@ -442,72 +392,72 @@
 
 }}}
 {{{
-
-
-
-
+//
+//
+//
+//
 // adder = add();     
 //                    function* add() {
 //
 //
 //
 //                    }
-
-
-
-
-
+//
+//
+//
+//
+//
 }}}
 {{{
-
-
-
-
+//
+//
+//
+//
 // adder = add();     
 // adder.next()       function* add() {
 //                                yield 1;
 //
 //
 //                    }
-
-
-
-
-
+//
+//
+//
+//
+//
 }}}
 {{{
-
-
-
-
+//
+//
+//
+//
 // adder = add();
 // adder.next();      function* add() {
 // adder.next(4);       const a = yield 1;
 //                                yield 2;
 //
 //                    }
-
-
-
-
-
+//
+//
+//
+//
+//
 }}}
 {{{
-
-
-
-
+//
+//
+//
+//
 // adder = add();     
 // adder.next();      function* add() {
 // adder.next(4);       const a = yield 1;
 // adder.next(5);       const b = yield 2;
 //                      return a + b;
 //                    }
-
-
-
-
-
+//
+//
+//
+//
+//
 }}}
 {{{ // addresult
 
@@ -610,6 +560,24 @@
   // }());
   //
   // sum.then(print);
+
+
+
+
+}}}
+
+{{{ // format()
+
+
+
+
+
+  format(
+    "It's {date | toWeekDay | toUpper} " +
+    "and we're in {city}.",
+    { date: new Date(), city: 'Warsaw' }
+  );
+
 
 
 
